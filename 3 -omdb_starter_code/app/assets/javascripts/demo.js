@@ -1,6 +1,37 @@
 // get the party started
 $(document).ready(function(){
 	// hide our spinner
+	$('.loading').hide();
+
+	$('.movieSearch').first().on('submit',function(e){
+		e.preventDefault();
+		$('#movie').remove();
+		$('.loading').show();
+		var title = $('#title').val();
+		$.ajax({
+			url: "http://www.omdbapi.com/",
+			data: {s: title}
+
+		}).done(function(result){
+			//dis = result;
+			$('.loading').hide();
+			var movieCollection = $($.parseJSON(result).Search);
+
+			console.log(movieCollection);
+
+			var outer_div = $('<div>').attr("id", "movie");
+
+			movieCollection.each(function(index,movie){
+				var movie_div = $('<div>').append(movie.Title+", "+movie.Year);
+				outer_div.append(movie_div);
+
+			});
+
+			$('#movieData').append(outer_div);
+
+		});
+	});
+});
 
 		// remove our success logic from the ajax response - save it for $when, make sure to return the promise object
 
@@ -24,5 +55,4 @@ $(document).ready(function(){
 
 			// clear the value of the text field
 
-});
 
